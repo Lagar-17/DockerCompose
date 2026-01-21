@@ -133,96 +133,35 @@ Docker permite incluso levantar stacks completos (frontend, backend, base de dat
 
 * 🔌 ***¿Qué otros tipos de contenedores existen además de docker?***
 
-**Aplicaciones Web y Documentación**
-* GitLab CE: Gestión de código, CI/CD, repositorios
-* Jekyll / MkDocs: Generación de documentación estática
-* Características: Despliegue rápido, versiones reproducibles, accesibles desde navegador
+Docker Registry
+* Repositorio para almacenar y distribuir imágenes Docker.
 
-**CI/CD y DevOps**
-* Jenkins / GitLab Runner: Automatización de pipelines
-* Registry: Almacén de imágenes Docker
-* Prometheus / Grafana: Monitorización
-* Elasticsearch / Kibana / Logstash: Logging y análisis de logs
-* Características: Automatización, visualización centralizada, gestión de registros y métricas
+Docker Compose
+* Define y ejecuta aplicaciones multicontenedor.
 
-**Big Data y Analytics**
-* Jupyter, Apache Spark, Apache NiFi, Kafka, Drill
-* Características: Procesamiento de datos, streaming, warehousing; reproducible y escalable en contenedores.
+Jenkins
+* Automatiza CI/CD ejecutando jobs en contenedores Docker.
 
-**Machine Learning / AI**
-* TensorFlow / PyTorch / Jupyter ML notebooks
-* MLflow / Kubeflow: MLOps y gestión de pipelines.
-* Características: Uso de GPU, entornos reproducibles, aislamiento de dependencias.
+GitLab Runner
+* Ejecuta pipelines CI/CD usando contenedores Docker.
 
-**Servidores de Juegos**
-* Minecraft, Counter-Strike, Terraria
-* Características: Aislamiento de instancias, fácil despliegue en cualquier servidor, control de puertos de red.
+Prometheus
+* Monitoriza métricas de contenedores y servicios.
 
-**Aplicaciones de Comunicación**
-* Rocket.Chat, Mattermost, Mailserver, Jitsi
-* Características: Chat, email y videoconferencia listos para producción, escalables y reproducibles.
+Grafana
+* Visualiza métricas de Docker y Kubernetes.
 
-**Almacenamiento y Compartición de Archivos**
-* Nextcloud, OwnCloud, FTP/SFTP, Syncthing
-* Características: Persistencia de datos, acceso multiusuario, sincronización y respaldo.
+Nginx
+* Proxy reverso y servidor web en contenedores.
 
-**Seguridad y Redes**
-* VPNs: OpenVPN, WireGuard
-* Proxy reverso: Nginx, Traefik
-* WAF: ModSecurity
-* Características: Aislamiento de tráfico, protección de aplicaciones, configuración reproducible
+Traefik
+* Proxy reverso con descubrimiento automático de contenedores.
 
-**CMS y E-commerce**
-* CMS: WordPress, Drupal, Joomla, Ghost
-* E-commerce: Magento, PrestaShop, WooCommerce
-* Características: Instalación rápida, portable, escalable y consistente
+Kubernetes
+* Orquesta y escala contenedores Docker.
 
-**Diseño y Multimedia**
-* GIMP, FFmpeg, Plex, Jellyfin
-* Características: Edición de imágenes, transcodificación y streaming dentro de contenedores, sin instalar software local.
-
-**Búsqueda e Indexación**
-* Elasticsearch, Solr, Manticore, Crawlers
-* Características: Motores de búsqueda y crawling reproducibles, fáciles de escalar
-
-**IoT**
-* MQTT, Home Assistant, Node-RED
-* Características: Gestión de sensores y automatización doméstica, entornos reproducibles
-
-**Sistemas de Gestión**
-* ERP: Odoo
-* CRM: SuiteCRM
-* Project Management: Wekan, Redmine
-* Características: Sistemas completos contenibles, aislados y portables
-
-**Testing y QA**
-* Selenium, SonarQube
-* Características: Automatización de pruebas y análisis de calidad en entornos idénticos a producción
-
-**Backend para Aplicaciones Móviles**
-* Supabase, Gotify, Parse Server
-* Características: Bases de datos, push notifications, Backend-as-a-Service
-
-**Ejemplo de Stack Completo**
-* Frontend (Node.js)
-* Backend (Python)
-* Base de datos (PostgreSQL)
-* Cache (Redis)
-* Cola de mensajes (RabbitMQ)
-* Monitorización (Prometheus)
-* Visualización (Grafana)
-* Logs (Elasticsearch)
-* Características: Multi-servicio, reproducible, escalable, aislado.
-
-**Otros Tipos de Contenedores**
-* Podman: Alternativa a Docker, rootless, daemonless, compatible con Docker
-* LXC/LXD: Contenedores de sistema completo, soporta systemd
-* containerd: Runtime de bajo nivel para Kubernetes y Docker
-* CRI-O: Runtime ligero, nativo para Kubernetes
-* Kata Containers / gVisor: Contenedores seguros, alto aislamiento, multi-tenant
-* Firecracker: MicroVMs ultraligeras, serverless, rápido y seguro
-* Windows Containers: Para aplicaciones Windows y .NET legacy
-* systemd-nspawn / OpenVZ: Contenedores ligeros o de sistema completo
+containerd
+* Runtime que ejecuta contenedores (usado por Docker y Kubernetes).
 
 * 🔌 ***Escribe una guía de usuario con los pasos claves para desplegar una aplicación web en contenedores.***
 
@@ -233,9 +172,160 @@ Link: https://lagar.gitbook.io/lagar/servicios-de-red/docker-compose-final
 ## 📦 Especificaciones de los archivos principales 
 
 ### 🕹️ Dockerfile
+
+**Ubicación:** ~/test-dcompose-lenvel/Dockerfile
+
+**¿Qué hace?**
+
+Este archivo define cómo construir la imagen personalizada de PHP que usará tu aplicación. Es como una "receta" que Docker sigue para preparar el entorno PHP necesario.
+
+**Contenido:**
+
+<img width="1200" height="216" alt="image" src="https://github.com/user-attachments/assets/da48519d-d33f-434f-ab34-9f8661840e04" />
+
+
+**Explicación línea por línea:**
+
+* FROM php:8-fpm: Utiliza como base la imagen oficial de PHP versión 8 con PHP-FPM (FastCGI Process Manager). FPM es necesario para que Nginx pueda comunicarse con PHP.
+* RUN docker-php-ext-install mysqli pdo pdo_mysql: Instala tres extensiones de PHP que son fundamentales para conectarse a MySQL:
+   * mysqli: Extensión mejorada de MySQL para PHP
+   * pdo: PHP Data Objects, interfaz para acceder a bases de datos
+   * pdo_mysql: Driver específico de PDO para MySQL
+* WORKDIR /var/www/lenvel: Establece el directorio de trabajo dentro del contenedor donde residirán tus archivos PHP.
+
+**¿Por qué es necesario?**
+
+PHP por defecto no incluye las extensiones de MySQL. Sin este Dockerfile, tu aplicación no podría conectarse a la base de datos, generando el error: "Call to undefined function mysqli_connect()".
+
 ### 🕹️ docker-compose.yaml
+
+**Ubicación:** ~/test-dcompose-lenvel/docker-compose.yaml
+
+**¿Qué hace?**
+
+Es el archivo maestro que orquesta todos los servicios de tu aplicación. Define qué contenedores se crean, cómo se comunican entre sí, qué puertos exponen y qué volúmenes comparten.
+
+**Contenido:**
+
+<img width="1206" height="734" alt="image" src="https://github.com/user-attachments/assets/2cf0f41e-d374-4be6-9cd5-03ec8a435040" />
+
+
+**Explicación de cada servicio:**
+
+Servicio db (MySQL)
+
+* Propósito: Base de datos que almacena los cursos de Lenvel
+* image: mysql:8.0: Usa la imagen oficial de MySQL versión 8.0
+* ports: "3307:3306": Mapea el puerto interno 3306 de MySQL al puerto 3307 de tu máquina (para evitar conflictos si ya tienes MySQL instalado)
+* environment: Variables de entorno que configuran MySQL automáticamente
+   * Crea el usuario root con contraseña 1234
+   * Crea la base de datos lenvel_cursos
+* volumes: Persiste los datos en tu disco duro, así no pierdes información al reiniciar el contenedor
+* restart: unless-stopped: Reinicia automáticamente si falla (excepto si lo paras manualmente)
+
+Servicio app (PHP-FPM)
+
+* Propósito: Procesa los archivos PHP de tu aplicación
+* build: .: Construye la imagen usando el Dockerfile del directorio actual
+* volumes:
+   * Monta tu carpeta Lenvel dentro del contenedor para que PHP pueda leer tus archivos
+   * Guarda logs de PHP en tu máquina para depuración
+* depends_on: db: No inicia hasta que MySQL esté corriendo
+* Puerto: No expone puertos externos, se comunica internamente con Nginx en el puerto 9000
+
+Servicio nginx (Servidor Web)
+
+* Propósito: Servidor web que recibe las peticiones HTTP y las dirige a PHP
+* ports: "86:80": Accesible desde http://localhost:86
+* volumes:
+   * Acceso a los archivos web (HTML, CSS, imágenes)
+   * Lee su configuración desde default.conf
+   * Guarda logs de acceso y errores
+* depends_on: app: Espera a que PHP esté listo antes de iniciar
+
+Servicio phpmyadmin
+
+* Propósito: Interfaz gráfica para administrar la base de datos
+* ports: "8081:80": Accesible desde http://localhost:8081
+* PMA_ARBITRARY: 1: Permite conectarse a cualquier servidor MySQL
+* Útil para: Crear tablas, ejecutar SQL, ver datos sin usar terminal
+
+Network lenvel-network
+
+* Propósito: Red privada que conecta todos los contenedores
+* driver: bridge: Tipo de red que permite comunicación interna
+* Importante: Gracias a esta red, PHP puede conectarse a MySQL usando el nombre db en lugar de una IP
+
 ### 🕹️ default.conf
+
+**Ubicación:** ~/test-dcompose-lenvel/Lenvel/nginx/conf.d/default.conf
+
+**¿Qué hace?**
+
+Configura cómo Nginx debe manejar las peticiones HTTP, específicamente cómo procesar archivos PHP y servir archivos estáticos.
+
+**Contenido:**
+
+<img width="1205" height="508" alt="image" src="https://github.com/user-attachments/assets/05cce308-af33-42a0-b262-f8f1c31935fb" />
+
+**Explicación detallada:**
+
+Bloque server
+
+* listen 80;: Nginx escucha en el puerto 80 (dentro del contenedor)
+* root /var/www/lenvel;: Carpeta raíz donde están tus archivos
+* index lenvel.php index.html;: Archivos que Nginx busca por defecto al acceder a una carpeta
+
+Bloque location ~ \.php$ (para archivos PHP)
+
+Este bloque maneja todas las URLs que terminan en .php:
+* try_files $uri =404;: Verifica que el archivo PHP existe, si no, devuelve error 404
+* fastcgi_pass app:9000;: CRÍTICO - Envía la petición al contenedor app (PHP-FPM) en el puerto 9000. Aquí es donde ocurre la magia:  Nginx delega el procesamiento PHP
+* fastcgi_index lenvel.php;: Archivo por defecto si solo se especifica un directorio
+* include fastcgi_params;: Incluye parámetros estándar de FastCGI
+* fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;: Le dice a PHP la ruta exacta del archivo a ejecutar
+
+Bloque location / (para todo lo demás)
+
+Maneja archivos estáticos como CSS, imágenes, JS:
+* try_files $uri $uri/ /lenvel.php?$query_string;:
+   * Intenta servir el archivo directamente ($uri)
+   * Si no existe, intenta como directorio ($uri/)
+   * Si tampoco, redirige a lenvel.php con los parámetros
 
 ## 💽 Incidencias técnicas y sus soluciones
 
+* Error 1: Pensar que los datos del contenedor eran persistentes
 
+Uno de los primeros errores que cometí fue creer que los datos creados dentro de un contenedor se guardaban automáticamente. Después de eliminar un contenedor, me di cuenta de que toda la información había desaparecido. Aprendí que la capa de escritura del contenedor es efímera y que, si quiero conservar datos, debo usar volúmenes o bind mounts.
+
+* Error 2: No mapear correctamente los puertos
+
+En varios casos la aplicación funcionaba dentro del contenedor, pero no podía acceder a ella desde el navegador. El problema era que no había mapeado los puertos correctamente. Aprendí que Docker aísla la red del contenedor y que es necesario exponer los puertos para poder acceder a los servicios.
+
+* Error 3: Ejecutar varios servicios en un mismo contenedor
+
+Intenté ejecutar más de un servicio dentro del mismo contenedor para simplificar la configuración, pero esto complicó el mantenimiento y la depuración. Aprendí que la filosofía de Docker es ejecutar una sola aplicación por contenedor.
+
+* Error 4: Ejecutar contenedores como root
+
+Al principio no presté atención al usuario con el que se ejecutaban los contenedores y dejé que todo corriera como root. Después entendí que esto supone un riesgo de seguridad y que es mejor ejecutar las aplicaciones con usuarios sin privilegios.
+
+* Error 5: Confundir imágenes con contenedores
+
+En algunos momentos confundí el concepto de imagen con el de contenedor, lo que me llevó a errores al eliminar recursos o a problemas de espacio en disco. Con el tiempo comprendí que las imágenes son plantillas y los contenedores son instancias en ejecución.
+
+* Error 6: No limpiar recursos que ya no se usan
+
+Conforme avanzaba en la actividad, fui acumulando contenedores detenidos, imágenes antiguas y volúmenes sin uso. Esto ocupó espacio innecesario en el disco. Aprendí que es importante hacer limpiezas periódicas para mantener el entorno ordenado.
+
+## 🧩 Conclusión
+
+Con esta actividad he aprendido a desplegar una aplicación web completa usando Docker Compose, integrando varios servicios (Nginx, PHP, MySQL y phpMyAdmin) y haciendo que se comuniquen entre sí. He comprendido la importancia de usar correctamente redes, volúmenes y variables de entorno, así como de configurar bien los archivos de conexión.
+También he aprendido a construir imágenes con Dockerfile, levantar y gestionar contenedores, y a detectar y solucionar errores. 
+
+**Resultado final de la web y la base de datos:**
+
+<img width="1212" height="714" alt="image" src="https://github.com/user-attachments/assets/22e8628c-d6f0-4572-939a-4bf45b9b2511" />
+
+<img width="1211" height="717" alt="image" src="https://github.com/user-attachments/assets/a4ba2dd1-bdf2-4bf0-af5f-5cb82db19732" />
